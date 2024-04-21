@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import { useDispatch } from "react-redux";
+import "./App.css";
+import Counter from "./components/Counter";
+import RichTextEditor from "./components/RichTextEditor";
+import UserDataForm from "./components/UserDataForm";
+import { useEffect } from "react";
+import useLocalStorage from "./hooks/useLocalStorage";
+import { addFormData } from "./slices/formSlice";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [formData, setFormData] = useLocalStorage("formData", null);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(addFormData(formData))
+    }, [])
+
+    return (
+        <div className="min-h-screen w-full p-8 relative flex gap-8">
+            <div className="flex-1 flex flex-col gap-8">
+                <Counter />
+                <RichTextEditor setFormData={setFormData} />
+            </div>
+            <UserDataForm setFormData={setFormData} />
+        </div>
+    );
 }
 
 export default App;
